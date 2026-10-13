@@ -23,8 +23,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isLoading, setIsLoading] = useState(true);
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const saved = localStorage.getItem('plant_theme');
-    if (saved === 'dark' || saved === 'light') return saved;
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    if (saved === 'dark' && localStorage.getItem('plant_theme_user_selected') === 'true') {
+      return 'dark';
+    }
+    return 'light';
   });
 
   // Apply dark mode class to html
@@ -38,7 +40,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [theme]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+    setTheme((prev) => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('plant_theme_user_selected', 'true');
+      return next;
+    });
   };
 
   const refreshUser = async () => {

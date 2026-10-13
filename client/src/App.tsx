@@ -35,7 +35,7 @@ const MainApp: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 dark:bg-stone-950">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-stone-950">
         <div className="text-center space-y-3">
           <div className="w-10 h-10 border-3 border-emerald-800 border-t-transparent rounded-full animate-spin mx-auto" />
           <p className="text-xs text-stone-500 font-medium">Loading Hydrate your plant using fuzzy logic...</p>
@@ -47,7 +47,7 @@ const MainApp: React.FC = () => {
   // If not logged in, but hitting confirmation page with scheduleId:
   if (!user && currentView === 'confirm') {
     return (
-      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 bg-mesh-nature">
+      <div className="min-h-screen bg-white dark:bg-stone-950 bg-mesh-nature">
         <Navbar currentView={currentView} onNavigate={handleNavigate} />
         <main className="pb-16">
           <ConfirmationPage
@@ -62,7 +62,7 @@ const MainApp: React.FC = () => {
   // If not logged in: show Login or Register
   if (!user) {
     return (
-      <div className="min-h-screen bg-stone-50 dark:bg-stone-950 bg-mesh-nature">
+      <div className="min-h-screen bg-white dark:bg-stone-950 bg-mesh-nature">
         <Navbar currentView={currentView} onNavigate={handleNavigate} />
         <main className="pb-16">
           {currentView === 'register' ? (
@@ -79,7 +79,7 @@ const MainApp: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 bg-mesh-nature flex flex-col justify-between">
+    <div className="min-h-screen bg-white dark:bg-stone-950 bg-mesh-nature flex flex-col justify-between">
       <div>
         <Navbar currentView={currentView} onNavigate={handleNavigate} />
 

@@ -54,13 +54,13 @@ def create_app():
         <head>
             <title>Plant Care Companion API</title>
             <style>
-                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #04140e; color: #ecfdf5; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-                .card { background: rgba(7, 34, 24, 0.85); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: 24px; padding: 40px; text-align: center; max-width: 520px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-                h1 { color: #34d399; margin-top: 0; font-size: 24px; }
-                p { color: #a7f3d0; line-height: 1.6; font-size: 14px; }
-                .btn { display: inline-block; margin: 8px 4px; padding: 12px 20px; background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 13px; transition: transform 0.2s; }
-                .btn:hover { transform: scale(1.05); }
-                .api-link { display: block; margin-top: 15px; color: #6ee7b7; font-size: 12px; text-decoration: underline; }
+                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #0f172a; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+                .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 40px; text-align: center; max-width: 520px; box-shadow: 0 20px 40px -15px rgba(0,0,0,0.08); }
+                h1 { color: #065f46; margin-top: 0; font-size: 24px; font-weight: 800; }
+                p { color: #475569; line-height: 1.6; font-size: 14px; }
+                .btn { display: inline-block; margin: 8px 4px; padding: 12px 20px; background: linear-gradient(135deg, #10b981, #059669); color: white; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 13px; transition: transform 0.2s; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); }
+                .btn:hover { transform: scale(1.04); }
+                .api-link { display: block; margin-top: 15px; color: #059669; font-size: 12px; font-weight: 600; text-decoration: underline; }
             </style>
         </head>
         <body>
