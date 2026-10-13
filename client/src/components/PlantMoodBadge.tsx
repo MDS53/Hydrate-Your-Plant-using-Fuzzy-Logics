@@ -31,8 +31,8 @@ export const getBotanicalStatus = (
   if (isDueToday || suggestedMl > baseMl * 1.25) {
     return {
       title: 'Hydration Required',
-      colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200',
-      badgeBorder: 'border-amber-400/80 dark:border-amber-600/70',
+      colorClass: 'bg-amber-100/80 dark:bg-stone-800 text-amber-950 dark:text-stone-200',
+      badgeBorder: 'border-amber-400 dark:border-amber-600/70',
       insights: [
         'Substrate moisture has depleted below target threshold. Watering recommended.',
         'Elevated ambient temperatures have increased transpiration rate.',
@@ -44,8 +44,8 @@ export const getBotanicalStatus = (
   if (suggestedMl < baseMl * 0.75) {
     return {
       title: 'Moisture Retentive',
-      colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200',
-      badgeBorder: 'border-slate-400/80 dark:border-slate-600/70',
+      colorClass: 'bg-sky-100/80 dark:bg-stone-800 text-sky-950 dark:text-stone-200',
+      badgeBorder: 'border-sky-300 dark:border-slate-600/70',
       insights: [
         'Recent humidity or precipitation indicates sufficient soil moisture.',
         'Transpiration rate is currently low; postpone watering to avoid saturation.',
@@ -57,8 +57,8 @@ export const getBotanicalStatus = (
   if (isSucculent) {
     return {
       title: 'Drought Adapted',
-      colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200',
-      badgeBorder: 'border-emerald-600/50 dark:border-emerald-600/50',
+      colorClass: 'bg-emerald-100/80 dark:bg-stone-800 text-emerald-950 dark:text-stone-200',
+      badgeBorder: 'border-emerald-400 dark:border-emerald-600/50',
       insights: [
         'Arid species; efficiently stores water in specialized tissue.',
         'Requires extended dry intervals between water applications.',
@@ -70,7 +70,7 @@ export const getBotanicalStatus = (
   if (isSensitive) {
     return {
       title: 'Delicate Foliage',
-      colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200',
+      colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-200',
       badgeBorder: 'border-stone-400 dark:border-stone-600',
       insights: [
         'Sensitive foliage; maintain steady soil moisture and avoid extremes.',
@@ -83,8 +83,8 @@ export const getBotanicalStatus = (
   if (healthScore >= 85) {
     return {
       title: 'Optimal Vitality',
-      colorClass: 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200',
-      badgeBorder: 'border-emerald-400/70 dark:border-emerald-600/60',
+      colorClass: 'bg-emerald-100/90 dark:bg-emerald-950/40 text-emerald-950 dark:text-emerald-200',
+      badgeBorder: 'border-emerald-400 dark:border-emerald-600/60',
       insights: [
         'Chlorophyll synthesis and hydration are in optimal equilibrium.',
         'Foliage turgidity and transpiration indicate excellent vitality.',
@@ -95,7 +95,7 @@ export const getBotanicalStatus = (
 
   return {
     title: 'Healthy & Balanced',
-    colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-800 dark:text-stone-200',
+    colorClass: 'bg-stone-100 dark:bg-stone-800 text-stone-900 dark:text-stone-200',
     badgeBorder: 'border-stone-300 dark:border-stone-700',
     insights: [
       'Steady vegetative condition with balanced hydration levels.',

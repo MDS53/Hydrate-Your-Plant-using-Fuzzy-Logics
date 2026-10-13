@@ -106,43 +106,43 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
 
       {/* Quick Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="glass-card p-5 rounded-2xl flex items-center gap-4 border border-stone-200 dark:border-stone-800">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200/80 dark:border-emerald-800 flex items-center justify-center text-emerald-800 dark:text-emerald-400 shrink-0">
+        <div className="glass-card p-5 rounded-2xl flex items-center gap-4 border border-stone-200/90 dark:border-stone-800 shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-emerald-100/70 dark:bg-emerald-950/50 border border-emerald-300/80 dark:border-emerald-800 flex items-center justify-center text-emerald-900 dark:text-emerald-400 shrink-0">
             <Sprout className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-2xl font-black text-stone-900 dark:text-stone-100 font-mono">
+            <span className="text-3xl font-black text-stone-950 dark:text-stone-100 font-mono">
               {totalPlants}
             </span>
-            <span className="text-xs text-stone-500 dark:text-stone-400 block font-medium">
+            <span className="text-xs text-stone-700 dark:text-stone-400 block font-bold">
               Registered Plants
             </span>
           </div>
         </div>
 
-        <div className="glass-card p-5 rounded-2xl flex items-center gap-4 border border-stone-200 dark:border-stone-800">
-          <div className="w-12 h-12 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 flex items-center justify-center text-stone-700 dark:text-stone-300 shrink-0">
-            <Droplets className="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
+        <div className="glass-card p-5 rounded-2xl flex items-center gap-4 border border-stone-200/90 dark:border-stone-800 shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-800 dark:text-stone-300 shrink-0">
+            <Droplets className="w-6 h-6 text-emerald-800 dark:text-emerald-400" />
           </div>
           <div>
-            <span className="text-2xl font-black text-stone-900 dark:text-stone-100 font-mono">
+            <span className="text-3xl font-black text-stone-950 dark:text-stone-100 font-mono">
               {dueTodayCount}
             </span>
-            <span className="text-xs text-stone-500 dark:text-stone-400 block font-medium">
+            <span className="text-xs text-stone-700 dark:text-stone-400 block font-bold">
               {dueTodayCount > 0 ? 'Watering Due Today' : 'All Watered'}
             </span>
           </div>
         </div>
 
-        <div className="glass-card p-5 rounded-2xl flex items-center gap-4 border border-stone-200 dark:border-stone-800">
-          <div className="w-12 h-12 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 flex items-center justify-center text-stone-700 dark:text-stone-300 shrink-0">
-            <Heart className="w-6 h-6 text-emerald-700 dark:text-emerald-400" />
+        <div className="glass-card p-5 rounded-2xl flex items-center gap-4 border border-stone-200/90 dark:border-stone-800 shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-stone-100 dark:bg-stone-800 border border-stone-300 dark:border-stone-700 flex items-center justify-center text-stone-800 dark:text-stone-300 shrink-0">
+            <Heart className="w-6 h-6 text-emerald-800 dark:text-emerald-400" />
           </div>
           <div>
-            <span className="text-2xl font-black text-stone-900 dark:text-stone-100 font-mono">
+            <span className="text-3xl font-black text-stone-950 dark:text-stone-100 font-mono">
               {avgHealth}%
             </span>
-            <span className="text-xs text-stone-500 dark:text-stone-400 block font-medium">
+            <span className="text-xs text-stone-700 dark:text-stone-400 block font-bold">
               Average Plant Health
             </span>
           </div>

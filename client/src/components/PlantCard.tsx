@@ -98,7 +98,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onOpen, onRefresh }
               <div>
                 <h3
                   onClick={() => onOpen(id)}
-                  className="font-black text-lg text-stone-900 dark:text-emerald-50 leading-tight hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+                  className="font-black text-lg text-stone-950 dark:text-emerald-50 leading-tight hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors cursor-pointer"
                 >
                   {name}
                 </h3>
@@ -110,8 +110,8 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onOpen, onRefresh }
                   >
                     {environment}
                   </span>
-                  <span className="text-[11px] text-stone-500 dark:text-emerald-400/80 flex items-center gap-0.5 font-medium">
-                    <MapPin className="w-3 h-3 text-emerald-500/70" />
+                  <span className="text-[11px] text-stone-600 dark:text-emerald-400/80 flex items-center gap-0.5 font-bold">
+                    <MapPin className="w-3 h-3 text-emerald-600" />
                     {location.city}
                   </span>
                 </div>
@@ -136,22 +136,22 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onOpen, onRefresh }
               reason={todaySuggestion.reason}
             />
 
-            <span className="text-[11px] font-mono text-stone-400 dark:text-emerald-500/70">
+            <span className="text-[11px] font-mono text-stone-600 dark:text-emerald-500/70 font-semibold">
               {pot.volumeL}L {pot.material}
             </span>
           </div>
 
           {/* Today's Suggested Water with Base in Brackets */}
           <div className="mt-3.5 p-3.5 rounded-2xl bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-cyan-500/10 dark:from-emerald-950/40 dark:via-teal-950/30 dark:to-[#042016]/40 border border-emerald-500/25 dark:border-emerald-500/30 relative">
-            <div className="flex items-center justify-between text-xs text-emerald-800 dark:text-emerald-300 font-bold mb-1">
+            <div className="flex items-center justify-between text-xs text-emerald-950 dark:text-emerald-300 font-extrabold mb-1">
               <span className="flex items-center gap-1.5">
-                <Droplet className="w-3.5 h-3.5 text-emerald-500 fill-emerald-500 animate-pulse" />
+                <Droplet className="w-3.5 h-3.5 text-emerald-600 fill-emerald-600 animate-pulse" />
                 <span>Today's Suggestion:</span>
               </span>
               <button
                 type="button"
                 onClick={() => setShowFuzzyModal(true)}
-                className="text-[11px] text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 flex items-center gap-1 font-black underline underline-offset-2"
+                className="text-[11px] text-emerald-800 dark:text-emerald-400 hover:text-emerald-900 dark:hover:text-emerald-300 flex items-center gap-1 font-black underline underline-offset-2"
                 title="View how fuzzy logic engine calculated this"
               >
                 <HelpCircle className="w-3.5 h-3.5" />
@@ -160,15 +160,15 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onOpen, onRefresh }
             </div>
 
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-stone-900 dark:text-emerald-100 tracking-tight font-mono">
+              <span className="text-3xl font-black text-stone-950 dark:text-emerald-100 tracking-tight font-mono">
                 {todaySuggestion.suggestedMl} ml
               </span>
-              <span className="text-xs font-semibold text-stone-500 dark:text-emerald-400/80">
+              <span className="text-xs font-bold text-stone-600 dark:text-emerald-400/80">
                 (base: {todaySuggestion.baseMl} ml)
               </span>
             </div>
 
-            <p className="mt-1 text-xs text-stone-700 dark:text-emerald-200/90 leading-relaxed font-medium">
+            <p className="mt-1 text-xs text-stone-800 dark:text-emerald-200/90 leading-relaxed font-semibold">
               {todaySuggestion.reason}
             </p>
 
@@ -182,7 +182,7 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onOpen, onRefresh }
 
           {/* Next Watering Date Alert */}
           <div className="mt-3.5 flex items-center justify-between text-xs px-1">
-            <span className="text-stone-500 dark:text-emerald-400/70 flex items-center gap-1.5 font-medium">
+            <span className="text-stone-700 dark:text-emerald-400/70 flex items-center gap-1.5 font-semibold">
               <Calendar className="w-3.5 h-3.5 text-emerald-500" />
               {isWatered ? 'Next Schedule:' : 'Next Watering:'}
             </span>
