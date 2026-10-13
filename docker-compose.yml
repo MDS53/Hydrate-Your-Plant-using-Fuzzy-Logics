@@ -1,0 +1,72 @@
+services:
+  # ===================================================
+  # 1. MongoDB Database
+  # ===================================================
+  mongodb:
+    image: mongo:7.0
+    container_name: plantcare-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=plant_companion
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - plantcare-network
+
+  # ===================================================
+  # 2. Python Flask Backend API
+  # ===================================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: plantcare-backend
+    restart: unless-stopped
+    ports:
+      - "5055:5055"
+    environment:
+      - PORT=5055
+      - MONGODB_URI=mongodb://mongodb:27017/plant_companion
+      - JWT_SECRET=plant_companion_super_secret_jwt_key_2026
+      - FRONTEND_URL=http://localhost:3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - WEATHER_API_BASE=https://api.open-meteo.com/v1/forecast
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    networks:
+      - plantcare-network
+
+  # ===================================================
+  # 3. React Frontend Client (Nginx)
+  # ===================================================
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: plantcare-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - plantcare-network
+
+volumes:
+  mongo_data:
+    name: plantcare_mongo_data
+
+networks:
+  plantcare-network:
+    name: plantcare-network
+    driver: bridge

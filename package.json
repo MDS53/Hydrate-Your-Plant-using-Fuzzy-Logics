@@ -1,0 +1,17 @@
+{
+  "name": "hydrate-your-plant",
+  "version": "1.0.0",
+  "description": "Plant Care Companion — multi-plant watering scheduler with weather-smart fuzzy logic suggestions, reminders, friend collaboration, and analytics",
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"bgBlue.bold,bgGreen.bold\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "seed": "npm --prefix server run seed",
+    "test": "npm --prefix server run test",
+    "test:fuzzy": "npm --prefix server run test:fuzzy"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.5"
+  }
+}

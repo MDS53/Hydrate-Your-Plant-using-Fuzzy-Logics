@@ -1,0 +1,66 @@
+# Environment variables and secrets (NEVER commit these!)
+.env
+.env.*
+*.env
+server/.env
+server/.env.*
+backend/.env
+backend/.env.*
+client/.env
+client/.env.*
+!.env.example
+!server/.env.example
+!backend/.env.example
+
+# Node dependencies and build artifacts
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+dist-ssr/
+build/
+*.tsbuildinfo
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Python environments and cache
+.venv/
+**/.venv/
+venv/
+**/venv/
+ENV/
+env/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor files
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# Docker / Local Database volumes
+mongo_data/
+**/mongo_data/
+*.sqlite
+*.sqlite3
+*.db
