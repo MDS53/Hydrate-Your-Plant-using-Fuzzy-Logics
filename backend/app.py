@@ -1,6 +1,6 @@
 import os
 import sys
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from flask_cors import CORS
 from config import Config, get_db
 from routes.auth_routes import auth_bp
@@ -13,7 +13,12 @@ from services.scheduler_service import start_scheduler
 from seed import seed_database
 
 def create_app():
-    app = Flask(__name__)
+    # Detect client/dist directory (support root and backend cwd)
+    client_dist = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "client", "dist"))
+    if not os.path.exists(client_dist):
+        client_dist = os.path.abspath(os.path.join(os.getcwd(), "client", "dist"))
+
+    app = Flask(__name__, static_folder=client_dist if os.path.exists(client_dist) else None)
     CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
     # Register blueprints
@@ -24,8 +29,25 @@ def create_app():
     app.register_blueprint(analytics_bp, url_prefix="/api/analytics")
     app.register_blueprint(weather_bp, url_prefix="/api/weather")
 
-    @app.route("/", methods=["GET"])
-    def index():
+    @app.route("/", defaults={"path": ""})
+    @app.route("/<path:path>")
+    def serve_app(path):
+        # Do not hijack API routes
+        if path.startswith("api/"):
+            return jsonify({"error": "Endpoint not found"}), 404
+
+        # Serve static asset if requested file exists in dist
+        if path and os.path.exists(client_dist):
+            target_path = os.path.join(client_dist, path)
+            if os.path.isfile(target_path):
+                return send_from_directory(client_dist, path)
+
+        # Serve React SPA index.html
+        index_file = os.path.join(client_dist, "index.html")
+        if os.path.exists(index_file):
+            return send_from_directory(client_dist, "index.html")
+
+        # Fallback API status card if frontend has not been compiled yet
         return """
         <!DOCTYPE html>
         <html>
