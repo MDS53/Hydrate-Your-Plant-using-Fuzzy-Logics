@@ -685,3 +685,69 @@ def water_plant_now(plant_id: str):
         "emailRecipient": g.user.get("email"),
     }), 200
 
+@plant_bp.route("/<plant_id>/send-schedule", methods=["POST"])
+@require_auth
+def send_plant_schedule(plant_id: str):
+    db = get_db()
+    try:
+        plant = db.plants.find_one({"_id": ObjectId(plant_id)})
+    except Exception:
+        plant = db.plants.find_one({"_id": plant_id})
+
+    if not plant:
+        return jsonify({"error": "Plant not found"}), 404
+
+    caretakers = list(db.caretakers.find({"plantId": str(plant["_id"])}))
+    schedules = list(
+        db.schedules.find({
+            "plantId": str(plant["_id"]),
+            "status": {"$in": ["pending", "snoozed"]}
+        }).sort("date", 1).limit(14)
+    )
+
+    app_url = Config.APP_URL
+    assigned_dates = []
+    for s in schedules:
+        d_str = s.get("date", "")
+        try:
+            dt = datetime.fromisoformat(d_str.replace("Z", "+00:00"))
+            assigned_dates.append(dt.strftime("%a, %b %d at %I:%M %p"))
+        except Exception:
+            assigned_dates.append(d_str)
+
+    if not assigned_dates:
+        assigned_dates = ["Morning watering as scheduled"]
+
+    recipients_map = {}
+    if g.user.get("email"):
+        recipients_map[g.user["email"].lower()] = g.user.get("name", "Plant Owner")
+    for ct in caretakers:
+        if ct.get("email"):
+            recipients_map[ct["email"].lower()] = ct.get("name", "Caretaker")
+
+    sent_count = 0
+    preview_url = None
+    for email, name in recipients_map.items():
+        try:
+            res = send_schedule_notification_email(
+                recipient_email=email,
+                recipient_name=name,
+                plant_name=plant.get("name", "Plant"),
+                plant_emoji=plant.get("emoji", "🌿"),
+                assigned_dates=assigned_dates,
+                base_amount_ml=plant.get("baseWaterMl", 300),
+                app_url=app_url
+            )
+            if isinstance(res, dict) and res.get("previewUrl"):
+                preview_url = res["previewUrl"]
+            sent_count += 1
+        except Exception as e:
+            print(f"[Email] Failed sending to {email}: {e}")
+
+    return jsonify({
+        "message": f"Successfully emailed watering schedule to {sent_count} recipient(s)!",
+        "recipients": list(recipients_map.keys()),
+        "sentCount": sent_count,
+        "previewUrl": preview_url
+    }), 200
+

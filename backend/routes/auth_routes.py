@@ -140,3 +140,35 @@ def forgot_password():
         print(f"[Auth] Generated password reset token for {email}: {reset_token}")
 
     return jsonify({"message": "If that email is registered, reset instructions have been dispatched."})
+
+@auth_bp.route("/smtp-status", methods=["GET"])
+def get_smtp_status_route():
+    from services.email_service import get_smtp_status
+    status = get_smtp_status()
+    return jsonify(status)
+
+@auth_bp.route("/smtp-config", methods=["POST"])
+@require_auth
+def save_smtp_config_route():
+    from services.email_service import configure_smtp, verify_smtp, get_smtp_status
+    data = request.get_json() or {}
+    configure_smtp(data)
+    verify_res = verify_smtp()
+    status = get_smtp_status()
+    return jsonify({
+        "message": verify_res.get("message", "SMTP settings updated"),
+        "verified": verify_res.get("success", False),
+        "isEthereal": verify_res.get("isEthereal", False),
+        "status": status,
+    })
+
+@auth_bp.route("/test-email", methods=["POST"])
+@require_auth
+def send_test_email_route():
+    from services.email_service import send_test_email
+    data = request.get_json() or {}
+    to_email = (data.get("toEmail") or data.get("email") or g.user.get("email") or "").strip()
+    if not to_email:
+        return jsonify({"error": "Recipient email address is required"}), 400
+    res = send_test_email(to_email)
+    return jsonify(res)
