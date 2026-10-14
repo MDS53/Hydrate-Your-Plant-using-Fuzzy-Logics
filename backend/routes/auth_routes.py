@@ -9,9 +9,10 @@ from bson import ObjectId
 
 auth_bp = Blueprint("auth", __name__)
 
-def generate_token(user_id: str) -> str:
+def generate_token(user_id: str, email: str = "") -> str:
     payload = {
         "userId": user_id,
+        "email": email,
         "exp": datetime.utcnow() + timedelta(days=Config.JWT_EXPIRES_DAYS),
         "iat": datetime.utcnow(),
     }
@@ -45,7 +46,7 @@ def register():
     res = db.users.insert_one(user_doc)
     user_id = str(res.inserted_id)
 
-    token = generate_token(user_id)
+    token = generate_token(user_id, email)
     return jsonify({
         "message": "Account created successfully",
         "token": token,
@@ -73,7 +74,7 @@ def login():
         return jsonify({"error": "Invalid email or password"}), 401
 
     user_id = str(user["_id"])
-    token = generate_token(user_id)
+    token = generate_token(user_id, email)
     return jsonify({
         "message": "Logged in successfully",
         "token": token,

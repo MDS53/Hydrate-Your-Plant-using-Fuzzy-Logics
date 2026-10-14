@@ -17,7 +17,6 @@ from services.email_service import (
 plant_bp = Blueprint("plants", __name__)
 
 @plant_bp.route("/ai-preview", methods=["POST"])
-@require_auth
 def ai_preview():
     data = request.get_json() or {}
     name = data.get("name", "").strip()

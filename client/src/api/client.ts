@@ -24,6 +24,10 @@ export async function apiRequest<T = any>(
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (response.status === 401) {
+      console.warn('[API] 401 Unauthorized encountered. Cleaning stale credentials.');
+      localStorage.removeItem('plant_care_token');
+    }
     throw new Error(data.error || `Request failed with status ${response.status}`);
   }
 
