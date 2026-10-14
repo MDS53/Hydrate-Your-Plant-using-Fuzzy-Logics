@@ -38,7 +38,7 @@
       border-radius: 20px;
       padding: 32px 40px;
       box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05);
-      max-width: 650px;
+      max-width: 680px;
       width: 100%;
     }
     .mermaid {
@@ -60,14 +60,15 @@
   <div class="chart-container">
     <div class="mermaid">
 flowchart TD
-    A["<b>1. Data Collection</b><br/>Gathers live weather data and plant care settings"] --> B["<b>2. Fuzzification</b><br/>Converts numbers into descriptive terms (Warm, Dry, Humid)"]
-    B --> C["<b>3. Rule Evaluation</b><br/>Applies IF-THEN rules to determine watering needs"]
-    C --> D["<b>4. Defuzzification</b><br/>Combines rule results into a single watering factor"]
-    D --> E["<b>5. Context Adjustment</b><br/>Fine-tunes water amount by plant type and environment"]
-    E --> F["<b>6. Final Output</b><br/>Calculates exact milliliters to pour and dispatches reminders"]
+    A["<b>1. Data Collection</b><br/>Gathers live weather conditions and plant baseline water requirements"] --> B["<b>2. Input Fuzzification</b><br/>Converts raw weather readings into descriptive terms: Warm, Dry, Humid"]
+    B --> C["<b>3. Water Quantity Fuzzification</b><br/>Defines water volume levels: Skip, Very Low, Low, Normal, High, Very High"]
+    C --> D["<b>4. Rule Evaluation</b><br/>Applies IF-THEN rules linking weather conditions to water quantity levels"]
+    D --> E["<b>5. Defuzzification</b><br/>Merges active water levels into a single precise watering factor"]
+    E --> F["<b>6. Context Adjustment</b><br/>Fine-tunes the water factor by plant species and environment"]
+    F --> G["<b>7. Final Output</b><br/>Calculates exact milliliters to pour and dispatches reminders"]
 
     classDef stepStyle fill:#ffffff,stroke:#059669,stroke-width:2px,color:#0f172a,rx:12px,ry:12px;
-    class A,B,C,D,E,F stepStyle;
+    class A,B,C,D,E,F,G stepStyle;
     </div>
   </div>
 

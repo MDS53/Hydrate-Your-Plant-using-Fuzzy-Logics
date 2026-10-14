@@ -1,47 +1,57 @@
 # Fuzzy Logic Watering System - Flowchart
 
-A minimal, step-by-step flow of how the fuzzy logic engine determines plant watering needs.
+A minimal, step-by-step flow of how the fuzzy logic engine determines plant watering needs, including both input and water quantity fuzzification.
 
 ---
 
 ```mermaid
 flowchart TD
-    A["1. Data Collection<br/>Gathers live weather data and plant care settings"] --> B["2. Fuzzification<br/>Converts exact numbers into descriptive categories like Warm, Dry, or Humid"]
-    B --> C["3. Rule Evaluation<br/>Applies IF-THEN botanical rules to determine watering requirements"]
-    C --> D["4. Defuzzification<br/>Combines rule results into a single watering factor"]
-    D --> E["5. Context Adjustment<br/>Fine-tunes the result based on plant type and indoor/outdoor location"]
-    E --> F["6. Final Output<br/>Calculates exact milliliters to pour and dispatches reminders"]
+    A["1. Data Collection<br/>Gathers live weather conditions and plant baseline water requirements"] --> B["2. Input Fuzzification<br/>Converts raw weather readings into descriptive terms: Warm, Dry, Humid"]
+    B --> C["3. Water Quantity Fuzzification<br/>Defines water volume levels: Skip, Very Low, Low, Normal, High, Very High"]
+    C --> D["4. Rule Evaluation<br/>Applies IF-THEN botanical rules linking weather conditions to water quantity levels"]
+    D --> E["5. Defuzzification<br/>Merges the active water levels into a single precise watering factor"]
+    E --> F["6. Context Adjustment<br/>Fine-tunes the water factor based on plant species and indoor/outdoor location"]
+    F --> G["7. Final Output<br/>Calculates exact milliliters to pour and dispatches reminders"]
 ```
 
 ---
 
-## Process Breakdown
+## Step-by-Step Breakdown
 
 ### 1. Data Collection
-- Retrieves current temperature, humidity, and rainfall from the weather service.
-- Reads plant profile details (base water amount, indoor or outdoor location, drought tolerance).
+- Retrieves live temperature, humidity, and rainfall from the weather service.
+- Reads plant profile settings (base water volume in ml, environment, and pot dimensions).
 
-### 2. Fuzzification
-- Converts raw measurements into human-like descriptive categories:
-  - **Temperature:** Freezing, Cold, Cool, Mild, Warm, Hot
+### 2. Input Fuzzification
+- Converts raw sensor values into descriptive linguistic categories:
+  - **Temperature:** Freezing, Cold, Cool, Mild, Warm, Hot, Scorching Hot
   - **Humidity:** Dry, Comfortable, Humid
   - **Rainfall:** None, Light, Heavy
 
-### 3. Rule Evaluation
-- Evaluates practical gardening rules based on combined conditions, for example:
-  - *IF hot AND dry THEN increase water*
-  - *IF cold AND humid THEN decrease water*
-  - *IF heavy rain AND outdoor plant THEN skip watering*
+### 3. Water Quantity Fuzzification
+- Defines fuzzy membership categories for the target water volume:
+  - **Skip:** No water (0% – 20% of base)
+  - **Very Low:** Minimal hydration (20% – 50% of base)
+  - **Low:** Light watering (50% – 85% of base)
+  - **Normal:** Standard watering (80% – 120% of base)
+  - **High:** Increased hydration (105% – 135% of base)
+  - **Very High:** Maximum hydration (125% – 160% of base)
 
-### 4. Defuzzification
-- Merges all active rule outputs into a single numerical adjustment factor (e.g., 1.25 for +25% water).
+### 4. Rule Evaluation
+- Evaluates practical IF-THEN rules matching weather states to water quantity levels:
+  - *IF Temperature is Hot AND Humidity is Dry THEN Water Quantity is Very High*
+  - *IF Temperature is Cold AND Humidity is Humid THEN Water Quantity is Low*
+  - *IF Rain is Heavy AND Plant is Outdoor THEN Water Quantity is Skip*
 
-### 5. Context Adjustment
-- Applies practical adjustments based on plant habits:
-  - **Indoor plants:** Sheltered from wind and direct weather swings.
-  - **Outdoor plants:** Accounts directly for natural rain received.
-  - **Succulents & cacti:** Dampens high heat boosts to avoid overwatering.
+### 5. Defuzzification
+- Combines all triggered water quantity levels using the Center of Area method into a single numerical factor (e.g., 1.25 for +25% water).
 
-### 6. Final Output
-- Produces the final recommended volume in milliliters (e.g., 380 ml).
-- Displays the recommendation on the dashboard and automatically emails reminders to caretakers.
+### 6. Context Adjustment
+- Applies botanical adjustments based on environment and species habits:
+  - **Indoor plants:** Sheltered from wind and direct sunlight swings.
+  - **Outdoor plants:** Natural rain received is subtracted directly.
+  - **Succulents & cacti:** Heat increases are dampened to prevent overwatering.
+
+### 7. Final Output
+- Calculates the final water volume in exact milliliters (e.g., 380 ml).
+- Displays the recommendation on the plant dashboard and emails reminders to caretakers.
