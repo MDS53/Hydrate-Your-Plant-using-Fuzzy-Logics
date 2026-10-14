@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Fuzzy Logic Architecture Flowchart</title>
+  <title>Fuzzy Logic Watering System Flowchart</title>
   <style>
     * {
       box-sizing: border-box;
@@ -12,313 +12,208 @@
     body {
       background: #fbfbfd;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: #1f2937;
       display: flex;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 40px 20px;
     }
-    .flowchart-wrapper {
-      position: relative;
-      width: 860px;
+    .flowchart-container {
       background: #ffffff;
-      padding: 45px 35px;
-      border-radius: 28px;
-      box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.07);
       border: 1px solid #edf0f5;
-    }
-    .flowchart-title {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    .flowchart-title h2 {
-      font-size: 22px;
-      font-weight: 800;
-      color: #065f46;
-      letter-spacing: -0.3px;
-    }
-    .flowchart-title p {
-      font-size: 13px;
-      color: #64748b;
-      margin-top: 4px;
-    }
-
-    /* Spine Grid */
-    .spine-container {
+      border-radius: 28px;
+      padding: 45px 50px;
+      box-shadow: 0 12px 35px -10px rgba(0, 0, 0, 0.06);
+      width: 680px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      position: relative;
     }
-
-    /* Row Layouts */
-    .flow-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      position: relative;
-      margin: 4px 0;
-    }
-
-    /* Main Central Cards */
-    .main-card {
-      width: 440px;
-      padding: 16px 20px;
-      border-radius: 14px;
+    .flowchart-header {
       text-align: center;
+      margin-bottom: 28px;
+    }
+    .flowchart-header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #065f46;
+      letter-spacing: -0.3px;
+      margin-bottom: 5px;
+    }
+    .flowchart-header p {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    /* Cards */
+    .step-card {
+      width: 100%;
+      padding: 14px 22px;
+      border-radius: 16px;
       border-width: 1.5px;
       border-style: solid;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-      position: relative;
-      z-index: 2;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+      transition: transform 0.2s ease;
     }
-    .main-card h3 {
-      font-size: 16px;
-      font-weight: 700;
+    .step-card h3 {
+      font-size: 15px;
+      font-weight: 800;
       margin-bottom: 4px;
+      letter-spacing: -0.2px;
     }
-    .main-card p {
+    .step-card p {
       font-size: 12.5px;
       line-height: 1.45;
       font-weight: 500;
     }
 
-    /* Theme Variations */
-    .theme-green {
+    /* 7 Distinct Pastel Color Themes */
+    /* Step 1: Soft Forest Green */
+    .theme-1 {
       background: #eaf7ed;
       border-color: #8ed09f;
-      color: #0c5a32;
+      color: #14532d;
     }
-    .theme-purple {
-      background: #efedfd;
-      border-color: #b5aefa;
-      color: #3b3388;
+    .theme-1 h3 { color: #0c5a32; }
+
+    /* Step 2: Soft Sky Blue */
+    .theme-2 {
+      background: #edf5fe;
+      border-color: #a4cbfb;
+      color: #1e3a8a;
     }
-    .theme-coral {
+    .theme-2 h3 { color: #1d4ed8; }
+
+    /* Step 3: Soft Lavender / Purple */
+    .theme-3 {
+      background: #f2effe;
+      border-color: #beb8fa;
+      color: #3730a3;
+    }
+    .theme-3 h3 { color: #534bb3; }
+
+    /* Step 4: Soft Coral / Salmon */
+    .theme-4 {
       background: #fdf0ed;
       border-color: #f7b7a8;
-      color: #922718;
+      color: #991b1b;
     }
-    .theme-orange {
-      background: #fef3e7;
-      border-color: #facda3;
-      color: #874600;
-    }
-    .theme-mint {
-      background: #e3f7f0;
-      border-color: #93e0c4;
-      color: #08523c;
-    }
+    .theme-4 h3 { color: #b92c1a; }
 
-    /* Side Cards */
-    .side-card {
-      width: 185px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      background: #f5f2ed;
-      border: 1.5px solid #ded8ce;
-      color: #3f3933;
-      font-size: 11px;
-      line-height: 1.45;
-      position: absolute;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
-      z-index: 2;
+    /* Step 5: Soft Peach / Warm Amber */
+    .theme-5 {
+      background: #fef4e8;
+      border-color: #fad1a8;
+      color: #92400e;
     }
-    .side-card strong {
-      display: block;
-      font-size: 12px;
-      font-weight: 700;
-      color: #24201c;
-      margin-bottom: 4px;
-      text-align: center;
-    }
-    .side-left {
-      left: 0;
-    }
-    .side-right {
-      right: 0;
-    }
+    .theme-5 h3 { color: #b45309; }
 
-    /* Dashed connectors */
-    .dashed-line-left {
-      position: absolute;
-      left: 185px;
-      width: 25px;
-      top: 50%;
-      border-top: 1.5px dashed #9ca3af;
-      z-index: 1;
+    /* Step 6: Soft Mint / Teal */
+    .theme-6 {
+      background: #e6f7f2;
+      border-color: #99e5d4;
+      color: #115e59;
     }
-    .dashed-line-right {
-      position: absolute;
-      right: 185px;
-      width: 25px;
-      top: 50%;
-      border-top: 1.5px dashed #9ca3af;
-      z-index: 1;
-    }
+    .theme-6 h3 { color: #0f766e; }
 
-    /* Arrows between main cards */
-    .arrow-connector {
+    /* Step 7: Soft Royal Violet */
+    .theme-7 {
+      background: #f5edfe;
+      border-color: #d4b3fa;
+      color: #581c87;
+    }
+    .theme-7 h3 { color: #7e22ce; }
+
+    /* Vertical Arrow Connectors */
+    .arrow-divider {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 6px 0;
-      height: 38px;
-      position: relative;
       justify-content: center;
+      align-items: center;
+      height: 28px;
+      position: relative;
     }
-    .arrow-line {
+    .arrow-shaft {
       width: 1.5px;
       height: 100%;
-      background: #475569;
+      background: #64748b;
       position: relative;
     }
-    .arrow-line::after {
+    .arrow-shaft::after {
       content: '';
       position: absolute;
-      bottom: -1px;
+      bottom: 0px;
       left: -3.5px;
       width: 0;
       height: 0;
       border-left: 4.5px solid transparent;
       border-right: 4.5px solid transparent;
-      border-top: 6px solid #475569;
-    }
-    .arrow-label {
-      position: absolute;
-      left: 16px;
-      font-size: 11.5px;
-      color: #4b5563;
-      font-style: normal;
-      font-weight: 500;
-      white-space: nowrap;
+      border-top: 6px solid #64748b;
     }
   </style>
 </head>
 <body>
 
-  <div class="flowchart-wrapper">
-    <div class="flowchart-title">
-      <h2>Fuzzy Logic Watering System</h2>
-      <p>Architecture & Data Transformation Flow</p>
+  <div class="flowchart-container">
+    <div class="flowchart-header">
+      <h1>Fuzzy Logic Watering System</h1>
+      <p>Application Decision & Calculation Flow</p>
     </div>
 
-    <div class="spine-container">
-      
-      <!-- 1. USER & PLANT PREFERENCES -->
-      <div class="flow-row">
-        <div class="main-card theme-green">
-          <h3>Plant & Weather Inputs</h3>
-          <p>temperature · humidity · rainfall · species · pot volume</p>
-        </div>
-      </div>
-
-      <!-- Arrow 1 -->
-      <div class="arrow-connector">
-        <div class="arrow-line"></div>
-        <span class="arrow-label">crisp numbers</span>
-      </div>
-
-      <!-- 2. FUZZIFICATION -->
-      <div class="flow-row">
-        <!-- Left Side: Membership Functions -->
-        <div class="side-card side-left">
-          <strong>Membership fns</strong>
-          shoulder_left(x, a, b)<br/>
-          triangular(x, a, b, c)<br/>
-          shoulder_right(x, a, b)
-        </div>
-        <div class="dashed-line-left"></div>
-
-        <!-- Center Card -->
-        <div class="main-card theme-purple">
-          <h3>Fuzzification</h3>
-          <p>triangle() + shoulder() &rarr; membership degrees (&mu;)</p>
-        </div>
-
-        <div class="dashed-line-right"></div>
-        <!-- Right Side: Variables -->
-        <div class="side-card side-right">
-          <strong>Input & Output sets</strong>
-          temp: freezing / cold / mild / hot<br/>
-          humidity: dry / comfort / humid<br/>
-          water: skip / low / normal / high
-        </div>
-      </div>
-
-      <!-- Arrow 2 -->
-      <div class="arrow-connector">
-        <div class="arrow-line"></div>
-        <span class="arrow-label">13 &mu; values (weather + water)</span>
-      </div>
-
-      <!-- 3. FUZZY RULE ENGINE -->
-      <div class="flow-row">
-        <!-- Left Side: Rule Examples -->
-        <div class="side-card side-left">
-          <strong>Rule examples</strong>
-          R1: Freezing &rarr; VeryLow<br/>
-          R6: Mild + Comfort &rarr; Normal<br/>
-          R13: Hot + Dry &rarr; VeryHigh<br/>
-          R14: Heavy Rain &rarr; Skip
-        </div>
-        <div class="dashed-line-left"></div>
-
-        <!-- Center Card -->
-        <div class="main-card theme-coral">
-          <h3>Fuzzy rule engine</h3>
-          <p>
-            16 Mamdani rules &bull; AND = min() &bull; activation strength<br/>
-            e.g. IF temp HOT AND humidity DRY &rarr; VeryHigh (0.85)
-          </p>
-        </div>
-      </div>
-
-      <!-- Arrow 3 -->
-      <div class="arrow-connector">
-        <div class="arrow-line"></div>
-        <span class="arrow-label">fired rules + strengths</span>
-      </div>
-
-      <!-- 4. DEFUZZIFICATION + CONTEXT -->
-      <div class="flow-row">
-        <!-- Center Card -->
-        <div class="main-card theme-orange">
-          <h3>Defuzzification + context adjustment</h3>
-          <p>
-            Centroid: &int;(x &times; &mu;)dx / &int;(&mu;)dx &rarr; raw_factor<br/>
-            plant_context: indoor / balcony / outdoor &bull; succulent damping
-          </p>
-        </div>
-
-        <div class="dashed-line-right"></div>
-        <!-- Right Side: Damping -->
-        <div class="side-card side-right">
-          <strong>Context modifiers</strong>
-          Indoor: 45% weather damping<br/>
-          Balcony: 80% exposure & rain cut<br/>
-          Outdoor: 100% weather - rain<br/>
-          Succulent: 60% heat damping
-        </div>
-      </div>
-
-      <!-- Arrow 4 -->
-      <div class="arrow-connector">
-        <div class="arrow-line"></div>
-        <span class="arrow-label">final_factor (0.05 – 1.60)</span>
-      </div>
-
-      <!-- 5. CRISP HYDRATION OUTPUT -->
-      <div class="flow-row">
-        <div class="main-card theme-mint">
-          <h3>Crisp hydration recommendation</h3>
-          <p>V<sub>suggested</sub> = round(V<sub>base</sub> &times; final_factor) &bull; email sent via sm3590357@gmail.com</p>
-        </div>
-      </div>
-
+    <!-- Step 1 -->
+    <div class="step-card theme-1">
+      <h3>1. Data Collection</h3>
+      <p>Gathers live weather conditions and plant baseline water requirements</p>
     </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 2 -->
+    <div class="step-card theme-2">
+      <h3>2. Input Fuzzification</h3>
+      <p>Converts raw weather readings into descriptive terms: Warm, Dry, Humid</p>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 3 -->
+    <div class="step-card theme-3">
+      <h3>3. Water Quantity Fuzzification</h3>
+      <p>Defines water volume levels: Skip, Very Low, Low, Normal, High, Very High</p>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 4 -->
+    <div class="step-card theme-4">
+      <h3>4. Rule Evaluation</h3>
+      <p>Applies IF-THEN rules linking weather conditions to water quantity levels</p>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 5 -->
+    <div class="step-card theme-5">
+      <h3>5. Defuzzification</h3>
+      <p>Merges active water levels into a single precise watering factor</p>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 6 -->
+    <div class="step-card theme-6">
+      <h3>6. Context Adjustment</h3>
+      <p>Fine-tunes the water factor by plant species and environment</p>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 7 -->
+    <div class="step-card theme-7">
+      <h3>7. Final Output</h3>
+      <p>Calculates exact milliliters to pour and dispatches reminders</p>
+    </div>
+
   </div>
 
 </body>
