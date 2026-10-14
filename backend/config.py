@@ -17,11 +17,11 @@ class Config:
     GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
     WEATHER_PROVIDER = os.getenv("WEATHER_PROVIDER", "open-meteo")
     OPENWEATHERMAP_API_KEY = os.getenv("OPENWEATHERMAP_API_KEY", "").strip()
-    SMTP_HOST = os.getenv("SMTP_HOST", "smtp.ethereal.email")
-    SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-    SMTP_USER = os.getenv("SMTP_USER", "")
-    SMTP_PASS = os.getenv("SMTP_PASS", "")
-    EMAIL_FROM = os.getenv("EMAIL_FROM", '"Plant Care Companion" <noreply@plantcare.local>')
+    SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    SMTP_PORT = int(os.getenv("SMTP_PORT", 465))
+    SMTP_USER = os.getenv("SMTP_USER", "sm3590357@gmail.com")
+    SMTP_PASS = os.getenv("SMTP_PASS", "xarpndqoabkvhawt")
+    EMAIL_FROM = os.getenv("EMAIL_FROM", '"Hydrate your plant using fuzzy logic" <sm3590357@gmail.com>')
     MONGODB_URI = os.getenv("MONGODB_URI", "").strip()
 
 db_client = None

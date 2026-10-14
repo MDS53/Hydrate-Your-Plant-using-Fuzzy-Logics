@@ -5,24 +5,36 @@ from email.mime.multipart import MIMEMultipart
 from typing import List, Dict, Any, Optional
 from config import Config
 
+# System-wide Master SMTP Credentials for automated botanical email notifications
+SYSTEM_SMTP_USER = "sm3590357@gmail.com"
+SYSTEM_SMTP_PASS = "xarpndqoabkvhawt"  # App password for sm3590357@gmail.com
+SYSTEM_SMTP_HOST = "smtp.gmail.com"
+SYSTEM_SMTP_PORT = 465
+SYSTEM_SMTP_SERVICE = "gmail"
+SYSTEM_EMAIL_FROM = '"Hydrate your plant using fuzzy logic" <sm3590357@gmail.com>'
+
 # Runtime configuration cache
 _runtime_smtp: Dict[str, Any] = {}
 
 def get_effective_config() -> Dict[str, Any]:
-    service = (_runtime_smtp.get("service") or os.getenv("SMTP_SERVICE") or "").strip()
-    host = (_runtime_smtp.get("host") or os.getenv("SMTP_HOST") or "smtp.gmail.com" if service == "gmail" else "smtp.ethereal.email").strip()
+    service = (_runtime_smtp.get("service") or os.getenv("SMTP_SERVICE") or SYSTEM_SMTP_SERVICE).strip()
+    host = (_runtime_smtp.get("host") or os.getenv("SMTP_HOST") or SYSTEM_SMTP_HOST).strip()
     try:
-        port = int(_runtime_smtp.get("port") or os.getenv("SMTP_PORT") or (465 if service == "gmail" else 587))
+        raw_port = _runtime_smtp.get("port") or os.getenv("SMTP_PORT") or SYSTEM_SMTP_PORT
+        port = int(raw_port)
     except Exception:
-        port = 587
-    user = (_runtime_smtp.get("user") or os.getenv("SMTP_USER") or "").strip()
-    password = (_runtime_smtp.get("pass") or os.getenv("SMTP_PASS") or "").strip()
+        port = SYSTEM_SMTP_PORT
+
+    raw_user = _runtime_smtp.get("user") or os.getenv("SMTP_USER") or SYSTEM_SMTP_USER
+    user = raw_user.strip()
+
+    raw_pass = _runtime_smtp.get("pass") or os.getenv("SMTP_PASS") or SYSTEM_SMTP_PASS
+    # Strip any whitespace from app password
+    password = raw_pass.replace(" ", "").strip()
     
-    from_addr = (_runtime_smtp.get("from") or os.getenv("EMAIL_FROM") or "").strip()
-    if user and "@" in user:
+    from_addr = (_runtime_smtp.get("from") or os.getenv("EMAIL_FROM") or SYSTEM_EMAIL_FROM).strip()
+    if user and "@" in user and not from_addr:
         from_addr = f'"Hydrate your plant using fuzzy logic" <{user}>'
-    elif not from_addr:
-        from_addr = '"Hydrate your plant using fuzzy logic" <noreply@hydrateplant.app>'
 
     return {
         "service": service,
@@ -58,6 +70,8 @@ def get_smtp_status() -> Dict[str, Any]:
         "user": masked_user,
         "from": cfg["from"],
         "isEthereal": is_ethereal,
+        "isMasterActive": True,
+        "masterEmail": SYSTEM_SMTP_USER,
         "lastTestMessageUrl": None,
     }
 
@@ -67,31 +81,39 @@ def _send_smtp_mail(to_email: str, subject: str, html_body: str, text_body: str 
         print(f"[Email] ⚠️ No live SMTP credentials configured. Simulated email to {to_email}: '{subject}'")
         return False
 
-    try:
-        msg = MIMEMultipart("alternative")
-        msg["From"] = cfg["from"]
-        msg["To"] = to_email
-        msg["Subject"] = subject
+    msg = MIMEMultipart("alternative")
+    msg["From"] = cfg["from"]
+    msg["To"] = to_email
+    msg["Subject"] = subject
 
-        if text_body:
-            msg.attach(MIMEText(text_body, "plain", "utf-8"))
-        msg.attach(MIMEText(html_body, "html", "utf-8"))
+    if text_body:
+        msg.attach(MIMEText(text_body, "plain", "utf-8"))
+    msg.attach(MIMEText(html_body, "html", "utf-8"))
 
-        if cfg["port"] == 465:
-            with smtplib.SMTP_SSL(cfg["host"], cfg["port"], timeout=10) as server:
-                server.login(cfg["user"], cfg["pass"])
-                server.send_message(msg)
-        else:
-            with smtplib.SMTP(cfg["host"], cfg["port"], timeout=10) as server:
-                server.starttls()
-                server.login(cfg["user"], cfg["pass"])
-                server.send_message(msg)
+    # Attempt primary configured port, fall back to alternate port if needed
+    primary_port = cfg["port"]
+    backup_port = 587 if primary_port == 465 else 465
 
-        print(f"[Email] ✅ Successfully dispatched live email via SMTP to {to_email}")
-        return True
-    except Exception as e:
-        print(f"[Email] ⚠️ SMTP dispatch to {to_email} failed: {e}")
-        return False
+    for attempt, port in enumerate([primary_port, backup_port]):
+        try:
+            if port == 465:
+                with smtplib.SMTP_SSL(cfg["host"], 465, timeout=12) as server:
+                    server.login(cfg["user"], cfg["pass"])
+                    server.send_message(msg)
+            else:
+                with smtplib.SMTP(cfg["host"], port, timeout=12) as server:
+                    server.starttls()
+                    server.login(cfg["user"], cfg["pass"])
+                    server.send_message(msg)
+
+            print(f"[Email] ✅ Successfully dispatched live email via SMTP (port {port}) to {to_email}")
+            return True
+        except Exception as e:
+            print(f"[Email] ⚠️ SMTP dispatch attempt {attempt + 1} to {to_email} on port {port} failed: {e}")
+            if attempt == 1:
+                return False
+
+    return False
 
 def verify_smtp() -> Dict[str, Any]:
     cfg = get_effective_config()
