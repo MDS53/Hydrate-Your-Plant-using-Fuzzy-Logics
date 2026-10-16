@@ -81,17 +81,51 @@ export async function runDailyWeatherReEvaluation(): Promise<{ evaluatedCount: n
 }
 
 /**
+ * Reconcile pending schedule hours/minutes with their plant's preferred wateringTime
+ */
+export async function reconcilePendingScheduleTimes(): Promise<number> {
+  let updatedCount = 0;
+  try {
+    const pendingSchedules = await Schedule.find({ status: 'pending' }).populate<{ plantId: IPlant }>('plantId');
+    for (const sch of pendingSchedules) {
+      const plant = sch.plantId;
+      if (!plant || !plant.wateringTime) continue;
+
+      const [hStr, mStr] = plant.wateringTime.split(':');
+      const targetH = parseInt(hStr, 10);
+      const targetM = parseInt(mStr, 10);
+      if (isNaN(targetH) || isNaN(targetM)) continue;
+
+      const schDate = new Date(sch.date);
+      if (schDate.getHours() !== targetH || schDate.getMinutes() !== targetM) {
+        console.log(`[Scheduler] 🔧 Reconciling schedule ${sch._id} for plant "${plant.name}": shifted from ${schDate.getHours()}:${schDate.getMinutes()} to preferred time ${targetH}:${targetM}`);
+        schDate.setHours(targetH, targetM, 0, 0);
+        sch.date = schDate;
+        await sch.save();
+        updatedCount++;
+      }
+    }
+    if (updatedCount > 0) {
+      console.log(`[Scheduler] Successfully aligned ${updatedCount} schedule(s) to plants' exact preferred watering times.`);
+    }
+  } catch (err) {
+    console.error('[Scheduler] Error in reconcilePendingScheduleTimes:', err);
+  }
+  return updatedCount;
+}
+
+/**
  * Precision minute-level reminder dispatcher:
  * Checks every minute if any pending schedule has reached or passed its selected watering time today,
  * and sends emails to both the user (owner) and their added friends/caretakers.
  */
 export async function dispatchDueReminders(): Promise<{ sentCount: number }> {
   const now = new Date();
-  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const pastLimit = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-  // Find pending schedules where date <= now, within today, and reminder not yet sent
+  // Find pending schedules where date <= now, within recent days/today, and reminder not yet sent
   const dueSchedules = await Schedule.find({
-    date: { $gte: startOfDay, $lte: now },
+    date: { $gte: pastLimit, $lte: now },
     status: 'pending',
     lastReminderSentAt: { $exists: false },
   }).populate<{ plantId: IPlant }>('plantId');
@@ -330,6 +364,11 @@ export function startCronScheduler(): void {
   const cronTime = process.env.SCHEDULER_CRON || '0 8 * * *'; // 8:00 AM daily
   console.log(`[Scheduler] Initializing morning weather re-evaluation cron with: "${cronTime}"`);
 
+  // Initial startup reconciliation & due check
+  reconcilePendingScheduleTimes()
+    .then(() => dispatchDueReminders())
+    .catch((err) => console.error('[Scheduler] Initial startup check error:', err));
+
   // Daily morning weather re-evaluation
   cron.schedule(cronTime, async () => {
     console.log('[Scheduler] Running daily morning weather re-evaluation job...');
@@ -338,6 +377,7 @@ export function startCronScheduler(): void {
 
   // Precision minute cron: checks every minute for schedules reaching user-selected watering time!
   cron.schedule('* * * * *', async () => {
+    await reconcilePendingScheduleTimes();
     await dispatchDueReminders();
   });
 
@@ -346,5 +386,5 @@ export function startCronScheduler(): void {
     await processActiveSnoozes();
   });
 
-  console.log('[Scheduler] Background jobs successfully scheduled (including minute-by-minute reminder dispatcher).');
+  console.log('[Scheduler] Background jobs successfully scheduled (including minute-by-minute reminder dispatcher & preferred-time reconciler).');
 }

@@ -53,11 +53,15 @@ export const PlantCard: React.FC<PlantCardProps> = ({ plant, onOpen, onRefresh }
     return `In ${diffDays} days (${date.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })} at ${timeFormatted})`;
   };
 
-  const isScheduleDue = Boolean(
-    nextWateringDate && new Date(nextWateringDate).getTime() <= Date.now()
+  const isTodayOrPast = Boolean(
+    nextWateringDate && (
+      new Date(nextWateringDate).getTime() <= Date.now() ||
+      new Date(nextWateringDate).toDateString() === new Date().toDateString()
+    )
   );
+  const isScheduleDue = isTodayOrPast;
   const isWatered = Boolean(plant.isWateredToday || wateredJustNow);
-  const canWater = Boolean(!isWatered && isScheduleDue && (plant.canWaterNow !== false));
+  const canWater = Boolean(!isWatered && (isScheduleDue || plant.canWaterNow));
   const isToday = nextWateringDate && formatNextDate(nextWateringDate).includes('Today');
   const isOverdue = nextWateringDate && formatNextDate(nextWateringDate).includes('Overdue');
 

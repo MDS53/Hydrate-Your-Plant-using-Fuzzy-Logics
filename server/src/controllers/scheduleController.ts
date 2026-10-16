@@ -43,10 +43,12 @@ export async function generateSchedule(req: AuthRequest, res: Response): Promise
 
     const totalDays = weeks * 7;
     const [gH, gM] = (plant.wateringTime || '08:00').split(':').map(Number);
+    const safeGH = Number.isFinite(gH) ? gH : 8;
+    const safeGM = Number.isFinite(gM) ? gM : 0;
     for (let i = 0; i < totalDays; i++) {
       const targetDate = new Date(today);
       targetDate.setDate(today.getDate() + i);
-      targetDate.setHours(gH || 8, gM || 0, 0, 0);
+      targetDate.setHours(safeGH, safeGM, 0, 0);
       const dayOfWeek = targetDate.getDay();
 
       if (plant.pourDaysOfWeek.includes(dayOfWeek)) {

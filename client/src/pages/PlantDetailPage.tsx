@@ -148,13 +148,18 @@ export const PlantDetailPage: React.FC<PlantDetailPageProps> = ({
   // Find next pending schedule
   const nextSchedule = upcomingSchedules.find((s) => s.status === 'pending' || s.status === 'snoozed') || upcomingSchedules[0];
 
-  // Schedule reminder date and time check: strictly enabled ONLY when schedule date and time has occurred (<= now)
+  // Schedule reminder date and time check: enabled when scheduled time has occurred or when scheduled day is today
+  const isToday = Boolean(
+    nextSchedule && new Date(nextSchedule.date).toDateString() === new Date().toDateString()
+  );
   const isScheduleDue = Boolean(
-    nextSchedule && new Date(nextSchedule.date).getTime() <= Date.now()
+    nextSchedule && (
+      new Date(nextSchedule.date).getTime() <= Date.now() || isToday
+    )
   );
 
   const isWatered = Boolean(isWateredToday || wateredJustNow);
-  const canWater = Boolean(!isWatered && isScheduleDue && (canWaterNow !== false));
+  const canWater = Boolean(!isWatered && (isScheduleDue || canWaterNow));
 
   const nextDiffMl = nextSchedule ? nextSchedule.suggestedMl - nextSchedule.baseMl : 0;
   let verbalWord = '';

@@ -12,6 +12,7 @@ import { getWeatherForecast } from '../services/weatherService.js';
 import { evaluateFuzzyWatering } from '../fuzzy/engine.js';
 import { calculateHealthScore, checkAndAwardAchievements } from '../services/analyticsService.js';
 import { sendScheduleNotificationEmail, sendWateringConfirmationNotification } from '../services/emailService.js';
+import { dispatchDueReminders } from '../services/schedulerService.js';
 import crypto from 'crypto';
 
 const createPlantSchema = z.object({
@@ -246,15 +247,32 @@ export async function getPlantById(req: AuthRequest, res: Response): Promise<voi
       status: { $in: ['pending', 'snoozed'] },
     }).sort({ date: 1 }).limit(14);
 
+    // Auto-reconcile existing schedules with plant's preferred watering time
+    if (plant.wateringTime && upcomingSchedules.length > 0) {
+      const [tH, tM] = plant.wateringTime.split(':').map(Number);
+      const safeTH = Number.isFinite(tH) ? tH : 8;
+      const safeTM = Number.isFinite(tM) ? tM : 0;
+      for (const sch of upcomingSchedules) {
+        const d = new Date(sch.date);
+        if (d.getHours() !== safeTH || d.getMinutes() !== safeTM) {
+          d.setHours(safeTH, safeTM, 0, 0);
+          sch.date = d;
+          await sch.save();
+        }
+      }
+    }
+
     // If no upcoming schedule exists, auto-generate the next one
     if (upcomingSchedules.length === 0) {
       const pourDays = plant.pourDaysOfWeek && plant.pourDaysOfWeek.length > 0 ? plant.pourDaysOfWeek : [1];
       const [fH, fM] = (plant.wateringTime || '08:00').split(':').map(Number);
+      const safeFH = Number.isFinite(fH) ? fH : 8;
+      const safeFM = Number.isFinite(fM) ? fM : 0;
       const now = new Date();
       for (let d = 1; d <= 14; d++) {
         const cand = new Date(now);
         cand.setDate(cand.getDate() + d);
-        cand.setHours(fH || 8, fM || 0, 0, 0);
+        cand.setHours(safeFH, safeFM, 0, 0);
         const dayIdx = cand.getDay();
         if (pourDays.includes(dayIdx)) {
           const newSch = await Schedule.create({
@@ -301,6 +319,11 @@ export async function getPlantById(req: AuthRequest, res: Response): Promise<voi
       const schDate = new Date(upcomingSchedules[0].date);
       const now = new Date();
       canWaterNow = schDate <= now || schDate.toDateString() === now.toDateString();
+    }
+
+    // Auto-trigger reminder dispatch if watering is due right now and reminder hasn't been sent yet
+    if (canWaterNow && upcomingSchedules[0]?.status === 'pending' && !upcomingSchedules[0]?.lastReminderSentAt && new Date(upcomingSchedules[0].date) <= new Date()) {
+      dispatchDueReminders().catch((e) => console.warn('[PlantDetail] auto-dispatch due reminder error:', e));
     }
 
     res.json({
@@ -372,8 +395,10 @@ export async function createPlant(req: AuthRequest, res: Response): Promise<void
     let caretakerIndex = 0;
 
     const [wHourStr, wMinStr] = (validated.wateringTime || '08:00').split(':');
-    const wateringHour = parseInt(wHourStr, 10) || 8;
-    const wateringMin = parseInt(wMinStr, 10) || 0;
+    const parsedWH = parseInt(wHourStr, 10);
+    const wateringHour = Number.isFinite(parsedWH) ? parsedWH : 8;
+    const parsedWM = parseInt(wMinStr, 10);
+    const wateringMin = Number.isFinite(parsedWM) ? parsedWM : 0;
 
     // Check weather forecast for initial suggestion
     let initialWeather;
@@ -510,6 +535,11 @@ export async function createPlant(req: AuthRequest, res: Response): Promise<void
       });
     }
 
+    // Check if any schedule created for today is already due now and dispatch reminder right away
+    dispatchDueReminders().catch((err) => {
+      console.warn('[CreatePlant] Auto-dispatch due reminder error:', err);
+    });
+
     res.status(201).json({
       message: 'Plant profile created and whole schedule dispatched to user and team!',
       plant,
@@ -544,10 +574,12 @@ export async function updatePlant(req: AuthRequest, res: Response): Promise<void
     if (wateringTime) {
       plant.wateringTime = wateringTime;
       const [uH, uM] = wateringTime.split(':').map(Number);
+      const safeUH = Number.isFinite(uH) ? uH : 8;
+      const safeUM = Number.isFinite(uM) ? uM : 0;
       const pendingSchedules = await Schedule.find({ plantId: plant._id, status: 'pending' });
       for (const sch of pendingSchedules) {
         const d = new Date(sch.date);
-        d.setHours(uH || 8, uM || 0, 0, 0);
+        d.setHours(safeUH, safeUM, 0, 0);
         sch.date = d;
         await sch.save();
       }
@@ -794,11 +826,14 @@ export async function waterPlantNow(req: AuthRequest, res: Response): Promise<vo
     } else {
       // Generate next recurrence
       const pourDays = plant.pourDaysOfWeek && plant.pourDaysOfWeek.length > 0 ? plant.pourDaysOfWeek : [1];
+      const [recH, recM] = (plant.wateringTime || '08:00').split(':').map(Number);
+      const safeRecH = Number.isFinite(recH) ? recH : 8;
+      const safeRecM = Number.isFinite(recM) ? recM : 0;
       const now = new Date();
       for (let d = 1; d <= 14; d++) {
         const cand = new Date(now);
         cand.setDate(cand.getDate() + d);
-        cand.setHours(8, 0, 0, 0);
+        cand.setHours(safeRecH, safeRecM, 0, 0);
         const dayIdx = cand.getDay();
         if (pourDays.includes(dayIdx)) {
           let fuzzyFactor = 1.0;
