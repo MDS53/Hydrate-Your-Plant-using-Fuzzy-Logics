@@ -21,15 +21,18 @@ export function configureSmtp(settings: SmtpSettings): void {
 }
 
 export function getEffectiveConfig(): SmtpSettings {
-  const service = (runtimeSmtpSettings?.service || process.env.SMTP_SERVICE || '').trim();
-  const host = (runtimeSmtpSettings?.host || process.env.SMTP_HOST || '').trim();
-  const port = runtimeSmtpSettings?.port || (process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : 587);
+  const user = (runtimeSmtpSettings?.user || process.env.SMTP_USER || '').trim();
+  const rawPass = (runtimeSmtpSettings?.pass || process.env.SMTP_PASS || '').trim();
+  // Strip spaces if user provided an App Password with spaces (e.g. "xarp ndqo abkv hawt")
+  const pass = rawPass.replace(/\s+/g, '');
+  const service = (runtimeSmtpSettings?.service || process.env.SMTP_SERVICE || (user.toLowerCase().endsWith('@gmail.com') ? 'gmail' : '')).trim();
+
+  const host = (runtimeSmtpSettings?.host || process.env.SMTP_HOST || (service === 'gmail' ? 'smtp.gmail.com' : '')).trim();
+  const port = runtimeSmtpSettings?.port || (process.env.SMTP_PORT ? Number(process.env.SMTP_PORT) : (service === 'gmail' ? 465 : 587));
   const secure =
     runtimeSmtpSettings?.secure !== undefined
       ? runtimeSmtpSettings.secure
       : process.env.SMTP_SECURE === 'true' || port === 465;
-  const user = (runtimeSmtpSettings?.user || process.env.SMTP_USER || '').trim();
-  const pass = (runtimeSmtpSettings?.pass || process.env.SMTP_PASS || '').trim();
 
   // All outgoing mails must be sent strictly from this authenticated mail address to any user
   let from = (runtimeSmtpSettings?.from || process.env.EMAIL_FROM || '').trim();

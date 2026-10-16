@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Plant Care Companion - User Flow Diagram</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+    .flow-wrapper {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 28px;
+      padding: 36px 46px;
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.08);
+      width: 720px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .header h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #065f46;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+    .header p {
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+
+    /* Step Card Base */
+    .step-card {
+      width: 100%;
+      padding: 13px 22px;
+      border-radius: 14px;
+      border-width: 1.5px;
+      border-style: solid;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .step-card h3 {
+      font-size: 14.5px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+      margin: 0;
+    }
+
+    /* Distinct Pastel Color Palettes */
+    /* 1. Green */
+    .theme-green {
+      background: #eaf7ed;
+      border-color: #8ed09f;
+      color: #0c5a32;
+    }
+    /* 2. Blue */
+    .theme-blue {
+      background: #edf5fe;
+      border-color: #a4cbfb;
+      color: #1d4ed8;
+    }
+    /* 3. Purple */
+    .theme-purple {
+      background: #f2effe;
+      border-color: #beb8fa;
+      color: #534bb3;
+    }
+    /* 4. Coral / Red */
+    .theme-coral {
+      background: #fdf0ed;
+      border-color: #f7b7a8;
+      color: #b92c1a;
+    }
+    /* 5. Amber / Orange */
+    .theme-amber {
+      background: #fef4e8;
+      border-color: #fad1a8;
+      color: #b45309;
+    }
+    /* 6. Teal */
+    .theme-teal {
+      background: #e6f7f2;
+      border-color: #99e5d4;
+      color: #0f766e;
+    }
+    /* Decision Diamond / Badge */
+    .theme-decision {
+      background: #fdf2f8;
+      border-color: #f472b6;
+      color: #9d174d;
+      border-radius: 20px;
+      padding: 12px 24px;
+    }
+    /* 7a. Emerald */
+    .theme-emerald {
+      background: #ecfdf5;
+      border-color: #6ee7b7;
+      color: #047857;
+    }
+    /* 7b. Orange */
+    .theme-orange {
+      background: #fff7ed;
+      border-color: #fdba74;
+      color: #c2410c;
+    }
+    /* 8. Violet */
+    .theme-violet {
+      background: #f5edfe;
+      border-color: #d4b3fa;
+      color: #7e22ce;
+    }
+
+    /* Connectors */
+    .arrow-divider {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 20px;
+      position: relative;
+    }
+    .arrow-shaft {
+      width: 1.5px;
+      height: 100%;
+      background: #64748b;
+      position: relative;
+    }
+    .arrow-shaft::after {
+      content: '';
+      position: absolute;
+      bottom: 0px;
+      left: -3.5px;
+      width: 0;
+      height: 0;
+      border-left: 4.5px solid transparent;
+      border-right: 4.5px solid transparent;
+      border-top: 6px solid #64748b;
+    }
+
+    /* Branching Layout */
+    .branch-split {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .branch-lines-svg {
+      width: 100%;
+      height: 32px;
+    }
+    .branch-row {
+      width: 100%;
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+    }
+    .branch-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .branch-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2.5px 10px;
+      border-radius: 10px;
+      margin-bottom: 7px;
+    }
+    .tag-yes {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .tag-no {
+      background: #ffedd5;
+      color: #9a3412;
+    }
+    .branch-merge-svg {
+      width: 100%;
+      height: 32px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flow-wrapper">
+    <div class="header">
+      <h1>Hydrate Your Plant</h1>
+      <p>Application User Flow</p>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step-card theme-green">
+      <h3>1. User Authentication (Sign In / Register)</h3>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 2 -->
+    <div class="step-card theme-blue">
+      <h3>2. Plant Dashboard Overview</h3>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 3 -->
+    <div class="step-card theme-purple">
+      <h3>3. Add or Select Plant Profile</h3>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 4 -->
+    <div class="step-card theme-coral">
+      <h3>4. Soil Moisture & Live Weather Sync</h3>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 5 -->
+    <div class="step-card theme-amber">
+      <h3>5. Fuzzy Logic Inference Engine</h3>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 6 -->
+    <div class="step-card theme-teal">
+      <h3>6. View Recommended Water Volume & Urgency</h3>
+    </div>
+
+    <div class="arrow-divider"><div class="arrow-shaft"></div></div>
+
+    <!-- Step 7: Decision -->
+    <div class="step-card theme-decision">
+      <h3>Decision: Water Plant Now?</h3>
+    </div>
+
+    <!-- Branch Fork -->
+    <div class="branch-split">
+      <svg class="branch-lines-svg" viewBox="0 0 628 32" fill="none">
+        <!-- Top vertical center -->
+        <line x1="314" y1="0" x2="314" y2="10" stroke="#64748b" stroke-width="1.5" />
+        <!-- Horizontal split -->
+        <line x1="157" y1="10" x2="471" y2="10" stroke="#64748b" stroke-width="1.5" />
+        <!-- Down left -->
+        <line x1="157" y1="10" x2="157" y2="28" stroke="#64748b" stroke-width="1.5" />
+        <polygon points="153,28 161,28 157,32" fill="#64748b" />
+        <!-- Down right -->
+        <line x1="471" y1="10" x2="471" y2="28" stroke="#64748b" stroke-width="1.5" />
+        <polygon points="467,28 475,28 471,32" fill="#64748b" />
+      </svg>
+
+      <div class="branch-row">
+        <!-- Branch Left: Yes -->
+        <div class="branch-col">
+          <span class="branch-tag tag-yes">Option A: Water Now</span>
+          <div class="step-card theme-emerald">
+            <h3>7a. Confirm Pour & Log Watering</h3>
+          </div>
+        </div>
+
+        <!-- Branch Right: Later / Automated -->
+        <div class="branch-col">
+          <span class="branch-tag tag-no">Option B: Water Later</span>
+          <div class="step-card theme-orange">
+            <h3>7b. Scheduled Automated Email Alert</h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Branch Merge SVG -->
+      <svg class="branch-merge-svg" viewBox="0 0 628 32" fill="none">
+        <!-- Up from left card -->
+        <line x1="157" y1="0" x2="157" y2="20" stroke="#64748b" stroke-width="1.5" />
+        <!-- Up from right card -->
+        <line x1="471" y1="0" x2="471" y2="20" stroke="#64748b" stroke-width="1.5" />
+        <!-- Horizontal merge -->
+        <line x1="157" y1="20" x2="471" y2="20" stroke="#64748b" stroke-width="1.5" />
+        <!-- Down to center -->
+        <line x1="314" y1="20" x2="314" y2="28" stroke="#64748b" stroke-width="1.5" />
+        <polygon points="310,28 318,28 314,32" fill="#64748b" />
+      </svg>
+    </div>
+
+    <!-- Final Step -->
+    <div class="step-card theme-violet">
+      <h3>8. Care History & Plant Health Analytics</h3>
+    </div>
+
+  </div>
+
+</body>
+</html>

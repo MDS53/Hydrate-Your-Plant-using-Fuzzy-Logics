@@ -121,9 +121,6 @@ export const PotVolumePreview: React.FC<PotVolumePreviewProps> = ({
               <Layers className="w-4 h-4 text-emerald-700 dark:text-emerald-400" />
               <span>Pot Size Selection</span>
             </label>
-            <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
-              Select a standard pot size or customize volume and dimensions.
-            </p>
           </div>
 
           {onModeChange && (

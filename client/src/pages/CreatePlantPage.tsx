@@ -19,6 +19,7 @@ import {
   Clock,
   CloudSun,
   Mail,
+  Search,
 } from 'lucide-react';
 
 interface CreatePlantPageProps {
@@ -324,7 +325,7 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
             Create Plant Profile
           </h1>
           <p className="text-xs text-stone-500 dark:text-stone-400">
-            Configure pot dimensions, AI care requirements, weather location, and caretaker circle.
+            Configure pot dimensions, botanical care requirements, weather location, and caretaker circle.
           </p>
         </div>
       </div>
@@ -359,30 +360,14 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
               <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-1.5">
                 Plant Name or Variety *
               </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Monstera Deliciosa, Snake Plant, Fiddle Fig"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="flex-1 px-4 py-2.5 bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={handleFetchAiInfo}
-                  disabled={isGeneratingAi || !name.trim()}
-                  className="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-1.5 disabled:opacity-50 transition-all shadow-xs shrink-0"
-                  title="Generate botanical water requirement and description via Gemini AI"
-                >
-                  {isGeneratingAi ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Sparkles className="w-4 h-4" />
-                  )}
-                  <span>{isGeneratingAi ? 'Analyzing...' : 'AI Autofill'}</span>
-                </button>
-              </div>
+              <input
+                type="text"
+                required
+                placeholder="e.g. Monstera Deliciosa, Snake Plant, Aloe Vera, Ficus"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full px-4 py-2.5 bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+              />
             </div>
 
             {/* Emoji selector */}
@@ -468,9 +453,9 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
               </label>
               <div className="grid grid-cols-3 gap-2">
                 {[
-                  { id: 'indoor', label: 'Indoor', desc: 'Damped' },
-                  { id: 'balcony', label: 'Balcony', desc: 'Sheltered' },
-                  { id: 'outdoor', label: 'Outdoor', desc: '100% Weather' },
+                  { id: 'indoor', label: 'Indoor', desc: 'Protected' },
+                  { id: 'balcony', label: 'Balcony', desc: 'Covered' },
+                  { id: 'outdoor', label: 'Outdoor', desc: 'Full Exposure' },
                 ].map((env) => (
                   <button
                     key={env.id}
@@ -487,6 +472,9 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
                   </button>
                 ))}
               </div>
+              <p className="text-[11px] text-stone-500 dark:text-stone-400 mt-2">
+                Adapts evaporation rates and natural rainfall shielding for your plant location.
+              </p>
             </div>
           </div>
         </div>
@@ -508,18 +496,44 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
           />
         </div>
 
-        {/* SECTION C: AI Care Specs (Gemini LLM Scaled - Non-Editable) */}
+        {/* Search Botanical Care Profile Button (Placed Below Pot Size Section) */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-4 bg-emerald-50/80 dark:bg-emerald-950/30 border border-emerald-200/80 dark:border-emerald-800/50 rounded-2xl">
+          <div className="text-left">
+            <span className="text-xs font-bold text-emerald-900 dark:text-emerald-200 block">
+              Botanical Care & Hydration Lookup
+            </span>
+            <span className="text-[11px] text-stone-500 dark:text-emerald-400/80">
+              Search botanical requirements and weather-adjusted watering recommendations for {name ? `"${name}"` : 'your plant'}.
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={handleFetchAiInfo}
+            disabled={isGeneratingAi || !name.trim()}
+            className="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-98 text-white font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50 transition-all shadow-sm cursor-pointer shrink-0"
+            title="Search botanical specifications and care guidelines"
+          >
+            {isGeneratingAi ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Search className="w-4 h-4" />
+            )}
+            <span>{isGeneratingAi ? 'Searching...' : 'Search'}</span>
+          </button>
+        </div>
+
+        {/* SECTION C: Botanical Care Profile & Weather Recommendations */}
         <div className="glass-card p-6 rounded-3xl space-y-5 border border-emerald-500/20">
           <div className="flex items-center justify-between border-b border-stone-200/80 dark:border-emerald-900/40 pb-3">
             <h2 className="text-base font-black text-stone-900 dark:text-emerald-100 flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-xs font-black border border-emerald-500/30">
                 C
               </span>
-              <span>Botanical Care Profile (Gemini LLM Scaled)</span>
+              <span>Botanical Care Profile & Weather Recommendations</span>
             </h2>
             <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 shadow-xs">
               <Lock className="w-3 h-3" />
-              <span>AI Determined &bull; Read-Only</span>
+              <span>Botanical Specifications &bull; Read-Only</span>
             </span>
           </div>
 
@@ -531,7 +545,7 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
                 Watering Per Week Formula Summary
               </span>
               <span className="text-[11px] bg-white/20 px-2.5 py-0.5 rounded-full font-bold">
-                LLM Calculated Baseline
+                Standard Baseline Volume
               </span>
             </div>
 
@@ -555,7 +569,7 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
             </p>
           </div>
 
-          {/* Non-Editable Care Parameters Locked by LLM */}
+          {/* Non-Editable Care Parameters */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
             <div className="p-3.5 rounded-2xl bg-stone-100/80 dark:bg-emerald-950/40 border border-stone-200/80 dark:border-emerald-900/40">
               <span className="text-[11px] text-stone-500 dark:text-emerald-400/80 block font-bold mb-1">
@@ -590,14 +604,63 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
             </div>
           </div>
 
-          <div className="p-3.5 rounded-2xl bg-stone-100/60 dark:bg-emerald-950/30 border border-stone-200/60 dark:border-emerald-900/30">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-stone-600 dark:text-emerald-400/90 mb-1">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-500" />
-              <span>LLM Botanical Profile Description (Generated from Gemini):</span>
+          {/* Plant Botanical Description (When searched) */}
+          {careInfo.shortDescription && careInfo.shortDescription !== 'Thriving houseplant with balanced watering requirements.' && (
+            <div className="p-3.5 rounded-2xl bg-emerald-50/60 dark:bg-emerald-950/30 border border-emerald-200/60 dark:border-emerald-900/30 flex items-start gap-2.5">
+              <Info className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+              <p className="text-xs text-stone-700 dark:text-emerald-200/90 leading-relaxed font-medium">
+                {careInfo.shortDescription}
+              </p>
             </div>
-            <p className="text-xs text-stone-700 dark:text-emerald-200/90 leading-relaxed italic">
-              "{careInfo.shortDescription}"
-            </p>
+          )}
+
+          {/* Weather Report Description, Water Quantity & Placement Guidance */}
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-stone-50 to-emerald-50/50 dark:from-stone-900/60 dark:to-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/60 space-y-3.5">
+            <div className="flex items-center justify-between border-b border-emerald-200/60 dark:border-emerald-900/40 pb-2.5">
+              <span className="text-xs font-bold text-emerald-900 dark:text-emerald-200 flex items-center gap-1.5">
+                <CloudSun className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <span>Weather Report & Hydration Advisory</span>
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/60 text-emerald-800 dark:text-emerald-200">
+                {cityInput} • {fuzzyPreview.temp}°C
+              </span>
+            </div>
+
+            {/* Weather & Watering Volume Impact */}
+            <div className="text-xs text-stone-700 dark:text-stone-300 space-y-1.5 leading-relaxed">
+              <p>
+                <strong>Watering Quantity Recommendation:</strong> Based on current weather conditions in <strong>{cityInput}</strong> ({fuzzyPreview.temp}°C, {fuzzyPreview.humidity}% humidity, {fuzzyPreview.rainMm} mm rain), moisture evaporation in a {pot.volumeL} L pot is {fuzzyPreview.diffMl < 0 ? 'slower than standard baseline' : fuzzyPreview.diffMl > 0 ? 'accelerated by ambient warmth' : 'normal'}. Recommended pour: <strong className="text-emerald-700 dark:text-emerald-400 font-mono">{fuzzyPreview.suggestedMl} ml</strong> ({fuzzyPreview.diffMl < 0 ? `reduced by ${Math.abs(fuzzyPreview.diffMl)} ml` : fuzzyPreview.diffMl > 0 ? `increased by ${fuzzyPreview.diffMl} ml` : 'standard pour'}) to protect roots from waterlogging.
+              </p>
+            </div>
+
+            {/* Placement Suggestions (Indoor vs Outdoor / Balcony) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div className="p-3 rounded-xl bg-white dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700">
+                <span className="text-[11px] font-bold text-stone-900 dark:text-stone-100 block mb-1">
+                  🏡 Indoor Placement Suggestions
+                </span>
+                <p className="text-[11px] text-stone-600 dark:text-stone-400 leading-normal">
+                  Best kept in bright indirect sunlight. Keep away from cold drafts, air conditioning vents, and direct heat sources. Room temperatures between {careInfo.idealTempMin || 18}°C–{careInfo.idealTempMax || 26}°C support steady foliage growth.
+                </p>
+              </div>
+
+              <div className="p-3 rounded-xl bg-white dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700">
+                <span className="text-[11px] font-bold text-stone-900 dark:text-stone-100 block mb-1">
+                  🪴 Outdoor / Balcony Suggestions
+                </span>
+                <p className="text-[11px] text-stone-600 dark:text-stone-400 leading-normal">
+                  If kept outdoors or on a balcony, place in sheltered partial shade. Bring indoors if nighttime temperatures drop below {careInfo.criticalMinTemp || 10}°C, and ensure rapid pot drainage during heavy rainfall.
+                </p>
+              </div>
+            </div>
+
+            {/* Practical Care Suggestion */}
+            <div className="text-[11px] text-stone-600 dark:text-stone-400 bg-emerald-50/50 dark:bg-emerald-950/20 p-2.5 rounded-xl border border-emerald-100 dark:border-emerald-900/30 flex items-center gap-2">
+              <Info className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+              <span>
+                Pour water evenly around the root perimeter. Empty standing runoff from the saucer after 15 minutes to avoid root rot.
+              </span>
+            </div>
           </div>
         </div>
 
@@ -611,7 +674,7 @@ export const CreatePlantPage: React.FC<CreatePlantPageProps> = ({ onBack, onSucc
               <span>Watering Schedule: Date & Time Flexibility</span>
             </h2>
             <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
-              AI suggests {recommendedDaysCount} day{recommendedDaysCount > 1 ? 's' : ''}/week
+              Recommended: {recommendedDaysCount} day{recommendedDaysCount > 1 ? 's' : ''}/week
             </span>
           </div>
 
